@@ -33,7 +33,8 @@ function App() {
   
   return (
     <div>
-			<Button>Click me</Button>
+		<h1 className='bg-slate-500 w-full h-full p-10 m-5 text-gray-900'>Projeto teste</h1>
+			<Button>enviar</Button>
 			<Progress value={33} />
 			<Popover>
 				<PopoverTrigger>abrir</PopoverTrigger>
