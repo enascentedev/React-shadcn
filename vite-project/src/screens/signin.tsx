@@ -1,5 +1,6 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import {
 	Card,
 	CardContent,
@@ -18,12 +19,28 @@ import {
 	CarouselNext,
 } from "../components/ui/carousel";
 import { Button } from "../components/ui/button";
-import { Separator } from "@radix-ui/react-separator";
 import img1 from "../assets/1.svg";
 import img2 from "../assets/2.svg";
 import img3 from "../assets/3.svg";
 
+import { useAuthStore } from "../store/authStore";
+
 export function Signin() {
+	const { login } = useAuthStore(); // Pega a função de login do Zustand
+	const navigate = useNavigate(); // Hook para navegação
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [error, setError] = useState("");
+
+	const handleLogin = async () => {
+		try {
+			await login(email, password);
+			navigate("/dashboard"); // Redireciona após login
+		} catch (err) {
+			setError("Erro ao fazer login. Verifique suas credenciais.");
+		}
+	};
+
 	return (
 		<main className="bg-primary w-full h-screen flex">
 			<div className="bg-secondary w-full h-full flex items-center justify-center p-16">
@@ -72,21 +89,27 @@ export function Signin() {
 					<CardContent>
 						<div>
 							<Label htmlFor="email">Email</Label>
-							<Input id="email" placeholder="digite seu email" type="email" />
+							<Input
+								id="email"
+								placeholder="digite seu email"
+								type="email"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+							/>
 						</div>
 						<div className="mt-4">
 							<Label htmlFor="password">Senha</Label>
-							<Input id="password" placeholder="digite sua senha" type="password" />
+							<Input
+								id="password"
+								placeholder="digite sua senha"
+								type="password"
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+							/>
 						</div>
-						<Button className="mt-6 w-full">Entrar</Button>
-						<div className="flex items-center justify-center gap-6 mt-4">
-							<Separator />
-							{/* <span className='text-xs text-muted-foreground'>OU</span> */}
-							<Separator />
-						</div>
-						{/* <Button variant="outline" className='mt-6 w-full'>
-														<GitHubLogoIcon className="mr-2" /> Entrar com o GitHub
-												</Button> */}
+						<Button onClick={handleLogin} className="mt-6 w-full">
+							Entrar
+						</Button>
 					</CardContent>
 					<CardFooter className="flex flex-col items-center gap-2">
 						<p className="text-muted-foreground text-center text-sm">
