@@ -19,7 +19,6 @@ import {
 } from "../components/ui/carousel";
 import { Button } from "../components/ui/button";
 import { Separator } from "@radix-ui/react-separator";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import img1 from "../assets/1.svg";
 import img2 from "../assets/2.svg";
 import img3 from "../assets/3.svg";
