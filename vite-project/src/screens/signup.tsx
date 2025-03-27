@@ -13,6 +13,8 @@ import {
 } from "../components/ui/card";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
+import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group"
+
 import {
 	Carousel,
 	CarouselItem,
@@ -28,11 +30,16 @@ import img3 from "../assets/3.svg";
 export function Signup() {
 	const navigate = useNavigate();
 	const { token, isAuthenticated } = useAuthStore(); // Pega o estado de autenticação
+	
 	const [userData, setUserData] = useState({
-		username: "",
+		nome: "",
+		login: "",
 		email: "",
-		first_name: "",
 		password: "",
+		telefone: "",
+		status: "ativo",
+		perfil: "admin",
+		
 	});
 	const [error, setError] = useState("");
 
@@ -108,27 +115,53 @@ export function Signup() {
 					</CardHeader>
 					<CardContent>
 						<div>
-							<Label htmlFor="name">Usuário</Label>
-							<Input
-								id="name"
-								placeholder="Digite seu usuário"
-								type="text"
-								name="username"
-								value={userData.username}
-								onChange={handleChange}
-							/>
-						</div>
-						<div>
 							<Label htmlFor="name">Nome</Label>
 							<Input
 								id="name"
-								placeholder="Digite seu primeiro nome"
+								placeholder="Digite seu nome"
 								type="text"
-								name="first_name"
-								value={userData.first_name}
+								name="nome"
+								value={userData.nome}
 								onChange={handleChange}
 							/>
 						</div>
+
+						<div>
+							<Label htmlFor="name">login</Label>
+							<Input
+								id="name"
+								placeholder="Digite seu login"
+								type="text"
+								name="login"
+								value={userData.login}
+								onChange={handleChange}
+							/>
+						</div>
+
+						<div className="mt-4">
+							<Label htmlFor="password">Senha</Label>
+							<Input
+								id="password"
+								placeholder="Crie uma senha"
+								type="password"
+								name="password"
+								value={userData.password}
+								onChange={handleChange}
+							/>
+						</div>
+
+						<div className="mt-4">
+							<Label htmlFor="telefone">telefone</Label>
+							<Input
+								id="telefone"
+								placeholder="digite um telefone"
+								type="number"
+								name="telefone"
+								value={userData.telefone}
+								onChange={handleChange}
+							/>
+						</div>
+						
 						<div className="mt-4">
 							<Label htmlFor="email">Email</Label>
 							<Input
@@ -140,16 +173,47 @@ export function Signup() {
 								onChange={handleChange}
 							/>
 						</div>
+
 						<div className="mt-4">
-							<Label htmlFor="password">Senha</Label>
-							<Input
-								id="password"
-								placeholder="Crie uma senha"
-								type="password"
-								name="password"
-								value={userData.password}
-								onChange={handleChange}
-							/>
+							<Label className="mb-2 block">Status</Label>
+							<RadioGroup
+								name="status"
+								value={userData.status}
+								onValueChange={(value) => setUserData({ ...userData, status: value })}
+								className="flex gap-4"
+							>
+								<div className="flex items-center space-x-2">
+									<RadioGroupItem value="ativo" id="status-ativo" />
+									<Label htmlFor="status-ativo">Ativo</Label>
+								</div>
+								<div className="flex items-center space-x-2">
+									<RadioGroupItem value="inativo" id="status-inativo" />
+									<Label htmlFor="status-inativo">Inativo</Label>
+								</div>
+							</RadioGroup>
+						</div>
+
+						<div className="mt-4">
+							<Label className="mb-2 block">Perfil</Label>
+							<RadioGroup
+								name="perfil"
+								value={userData.perfil}
+								onValueChange={(value) => setUserData({ ...userData, perfil: value })}
+								className="flex flex-col gap-2"
+							>
+								<div className="flex items-center space-x-2">
+									<RadioGroupItem value="admin" id="perfil-admin" />
+									<Label htmlFor="perfil-admin">Admin</Label>
+								</div>
+								<div className="flex items-center space-x-2">
+									<RadioGroupItem value="comprador" id="perfil-comprador" />
+									<Label htmlFor="perfil-comprador">Comprador</Label>
+								</div>
+								<div className="flex items-center space-x-2">
+									<RadioGroupItem value="operador" id="perfil-operador" />
+									<Label htmlFor="perfil-operador">Operador</Label>
+								</div>
+							</RadioGroup>
 						</div>
 						<Button className="mt-6 w-full" onClick={handleSignup}>
 							Cadastrar
