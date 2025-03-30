@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+import { API_BASE_URL } from "../config";
 
 // Definição do tipo para o estado da autenticação
 interface AuthState {
@@ -16,7 +17,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
 	login: async (email, password) => {
 		try {
-			const response = await axios.post("http://127.0.0.1:8000/login/", {
+			const response = await axios.post(`${API_BASE_URL}/login/`, {
 				email,
 				password,
 			});

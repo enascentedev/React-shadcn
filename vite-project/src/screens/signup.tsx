@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import axios from "axios";
+import { API_BASE_URL } from "../config";
 import { Link } from "react-router-dom";
 import {
 	Card,
@@ -49,7 +50,7 @@ export function Signup() {
 	};
 	const handleSignup = async () => {
 		try {
-			const response = await axios.post("http://127.0.0.1:8000/register/", userData);
+			const response = await axios.post(`${API_BASE_URL}/register/`, userData);
 
 			// Captura o token retornado pelo backend
 			const { token } = response.data;
