@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import React, { JSX, useState } from "react";
 import {
 	Card,
 	CardContent,
@@ -25,17 +24,22 @@ import img3 from "../assets/3.svg";
 
 import { useAuthStore } from "../store/authStore";
 
-export function Signin() {
-	const { login } = useAuthStore(); // Pega a função de login do Zustand
-	const navigate = useNavigate(); // Hook para navegação
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [error, setError] = useState("");
+type AuthActions = {
+	login: (email: string, password: string) => Promise<void>;
+};
 
-	const handleLogin = async () => {
+export function Signin(): JSX.Element {
+	const { login }: AuthActions = useAuthStore();
+	const navigate = useNavigate();
+
+	const [email, setEmail] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
+	const [error, setError] = useState<string>("");
+
+	const handleLogin = async (): Promise<void> => {
 		try {
 			await login(email, password);
-			navigate("/dashboard"); // Redireciona após login
+			navigate("/dashboard");
 		} catch (err) {
 			setError("Erro ao fazer login. Verifique suas credenciais.");
 		}
@@ -46,33 +50,17 @@ export function Signin() {
 			<div className="bg-secondary w-full h-full flex items-center justify-center p-16">
 				<Carousel className="w-full max-w-3xl">
 					<CarouselContent>
-						<CarouselItem>
-							<div className="w-full flex justify-center items-center bg-background rounded p-8">
-								<img
-									src={img1}
-									alt="Imagem de executivo"
-									className="w-full max-w-lg h-auto object-contain"
-								/>
-							</div>
-						</CarouselItem>
-						<CarouselItem>
-							<div className="w-full flex justify-center items-center bg-background rounded p-8">
-								<img
-									src={img2}
-									alt="Imagem de executivo"
-									className="w-full max-w-lg h-auto object-contain"
-								/>
-							</div>
-						</CarouselItem>
-						<CarouselItem>
-							<div className="w-full flex justify-center items-center bg-background rounded p-8">
-								<img
-									src={img3}
-									alt="Imagem de executivo"
-									className="w-full max-w-lg h-auto object-contain"
-								/>
-							</div>
-						</CarouselItem>
+						{[img1, img2, img3].map((img, idx) => (
+							<CarouselItem key={idx}>
+								<div className="w-full flex justify-center items-center bg-background rounded p-8">
+									<img
+										src={img}
+										alt="Imagem de executivo"
+										className="w-full max-w-lg h-auto object-contain"
+									/>
+								</div>
+							</CarouselItem>
+						))}
 					</CarouselContent>
 					<CarouselPrevious />
 					<CarouselNext />
@@ -84,7 +72,9 @@ export function Signin() {
 						<CardTitle className="text-2xl font-bold tracking-tighter">
 							Entre com sua conta
 						</CardTitle>
-						<CardDescription>Utilize seu email e senha para entrar</CardDescription>
+						<CardDescription>
+							Utilize seu email e senha para entrar
+						</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<div>
@@ -94,7 +84,9 @@ export function Signin() {
 								placeholder="digite seu email"
 								type="email"
 								value={email}
-								onChange={(e) => setEmail(e.target.value)}
+								onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+									setEmail(e.target.value)
+								}
 							/>
 						</div>
 						<div className="mt-4">
@@ -104,9 +96,14 @@ export function Signin() {
 								placeholder="digite sua senha"
 								type="password"
 								value={password}
-								onChange={(e) => setPassword(e.target.value)}
+								onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+									setPassword(e.target.value)
+								}
 							/>
 						</div>
+						{error && (
+							<p className="text-red-500 text-sm mt-2">{error}</p>
+						)}
 						<Button onClick={handleLogin} className="mt-6 w-full">
 							Entrar
 						</Button>
@@ -114,13 +111,16 @@ export function Signin() {
 					<CardFooter className="flex flex-col items-center gap-2">
 						<p className="text-muted-foreground text-center text-sm">
 							Ainda não tem uma conta?{" "}
-							<Link to="/signup" className="text-primary font-bold hover:underline">
+							<Link
+								to="/signup"
+								className="text-primary font-bold hover:underline"
+							>
 								Cadastre-se aqui
 							</Link>
 						</p>
 						<p className="text-muted-foreground text-center text-xs">
-							Ao entrar na nossa plataforma você concorda com nossos termos de uso e nossa política
-							de privacidade.
+							Ao entrar na nossa plataforma você concorda com nossos termos de
+							uso e nossa política de privacidade.
 						</p>
 					</CardFooter>
 				</Card>

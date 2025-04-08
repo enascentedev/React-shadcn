@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { JSX, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import axios from "axios";
@@ -14,8 +14,7 @@ import {
 } from "../components/ui/card";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
-import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group"
-
+import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
 import {
 	Carousel,
 	CarouselItem,
@@ -28,11 +27,21 @@ import img1 from "../assets/1.svg";
 import img2 from "../assets/2.svg";
 import img3 from "../assets/3.svg";
 
-export function Signup() {
+type UserData = {
+	nome: string;
+	login: string;
+	email: string;
+	password: string;
+	telefone: string;
+	status: "ativo" | "inativo";
+	perfil: "admin" | "comprador" | "operador";
+};
+
+export function Signup(): JSX.Element {
 	const navigate = useNavigate();
-	const { token, isAuthenticated } = useAuthStore(); // Pega o estado de autenticação
-	
-	const [userData, setUserData] = useState({
+	const { token, isAuthenticated }: { token: string | null; isAuthenticated: boolean } = useAuthStore();
+
+	const [userData, setUserData] = useState<UserData>({
 		nome: "",
 		login: "",
 		email: "",
@@ -40,73 +49,45 @@ export function Signup() {
 		telefone: "",
 		status: "ativo",
 		perfil: "admin",
-		
 	});
-	const [error, setError] = useState("");
 
-	// Atualiza os valores do formulário
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const [error, setError] = useState<string>("");
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		setUserData({ ...userData, [e.target.name]: e.target.value });
 	};
-	const handleSignup = async () => {
+
+	const handleSignup = async (): Promise<void> => {
 		try {
 			const response = await axios.post(`${API_BASE_URL}/register/`, userData);
-
-			// Captura o token retornado pelo backend
 			const { token } = response.data;
 
-			// Armazena no localStorage
 			localStorage.setItem("token", token);
-
-			// Atualiza o estado do Zustand manualmente
 			useAuthStore.setState({ token, isAuthenticated: true });
-
-			// Redireciona para a página protegida
 			navigate("/dashboard");
 		} catch (err) {
 			setError("Erro ao registrar usuário. Verifique os dados.");
 		}
 	};
+
 	return (
 		<main className="bg-primary w-full h-screen flex">
-			{/* Carrossel */}
 			<div className="bg-secondary w-full h-full flex items-center justify-center p-16">
 				<Carousel className="w-full max-w-3xl">
 					<CarouselContent>
-						<CarouselItem>
-							<div className="w-full flex justify-center items-center bg-background rounded p-8">
-								<img
-									src={img1}
-									alt="Imagem de executivo"
-									className="w-full max-w-lg h-auto object-contain"
-								/>
-							</div>
-						</CarouselItem>
-						<CarouselItem>
-							<div className="w-full flex justify-center items-center bg-background rounded p-8">
-								<img
-									src={img2}
-									alt="Imagem de executivo"
-									className="w-full max-w-lg h-auto object-contain"
-								/>
-							</div>
-						</CarouselItem>
-						<CarouselItem>
-							<div className="w-full flex justify-center items-center bg-background rounded p-8">
-								<img
-									src={img3}
-									alt="Imagem de executivo"
-									className="w-full max-w-lg h-auto object-contain"
-								/>
-							</div>
-						</CarouselItem>
+						{[img1, img2, img3].map((img, index) => (
+							<CarouselItem key={index}>
+								<div className="w-full flex justify-center items-center bg-background rounded p-8">
+									<img src={img} alt="Imagem de executivo" className="w-full max-w-lg h-auto object-contain" />
+								</div>
+							</CarouselItem>
+						))}
 					</CarouselContent>
 					<CarouselPrevious />
 					<CarouselNext />
 				</Carousel>
 			</div>
 
-			{/* Formulário de Cadastro */}
 			<section className="flex items-center justify-center bg-background h-full max-w-3xl w-full p-4">
 				<Card className="w-full max-w-md">
 					<CardHeader>
@@ -116,24 +97,24 @@ export function Signup() {
 					</CardHeader>
 					<CardContent>
 						<div>
-							<Label htmlFor="name">Nome</Label>
+							<Label htmlFor="nome">Nome</Label>
 							<Input
-								id="name"
+								id="nome"
+								name="nome"
 								placeholder="Digite seu nome"
 								type="text"
-								name="nome"
 								value={userData.nome}
 								onChange={handleChange}
 							/>
 						</div>
 
 						<div>
-							<Label htmlFor="name">login</Label>
+							<Label htmlFor="login">Login</Label>
 							<Input
-								id="name"
+								id="login"
+								name="login"
 								placeholder="Digite seu login"
 								type="text"
-								name="login"
 								value={userData.login}
 								onChange={handleChange}
 							/>
@@ -143,33 +124,33 @@ export function Signup() {
 							<Label htmlFor="password">Senha</Label>
 							<Input
 								id="password"
+								name="password"
 								placeholder="Crie uma senha"
 								type="password"
-								name="password"
 								value={userData.password}
 								onChange={handleChange}
 							/>
 						</div>
 
 						<div className="mt-4">
-							<Label htmlFor="telefone">telefone</Label>
+							<Label htmlFor="telefone">Telefone</Label>
 							<Input
 								id="telefone"
-								placeholder="digite um telefone"
-								type="number"
 								name="telefone"
+								placeholder="Digite um telefone"
+								type="tel"
 								value={userData.telefone}
 								onChange={handleChange}
 							/>
 						</div>
-						
+
 						<div className="mt-4">
 							<Label htmlFor="email">Email</Label>
 							<Input
 								id="email"
+								name="email"
 								placeholder="Digite seu email"
 								type="email"
-								name="email"
 								value={userData.email}
 								onChange={handleChange}
 							/>
@@ -180,7 +161,9 @@ export function Signup() {
 							<RadioGroup
 								name="status"
 								value={userData.status}
-								onValueChange={(value) => setUserData({ ...userData, status: value })}
+								onValueChange={(value: string) =>
+									setUserData({ ...userData, status: value as UserData["status"] })
+								}
 								className="flex gap-4"
 							>
 								<div className="flex items-center space-x-2">
@@ -199,7 +182,9 @@ export function Signup() {
 							<RadioGroup
 								name="perfil"
 								value={userData.perfil}
-								onValueChange={(value) => setUserData({ ...userData, perfil: value })}
+								onValueChange={(value: string) =>
+									setUserData({ ...userData, perfil: value as UserData["perfil"] })
+								}
 								className="flex flex-col gap-2"
 							>
 								<div className="flex items-center space-x-2">
@@ -216,6 +201,7 @@ export function Signup() {
 								</div>
 							</RadioGroup>
 						</div>
+
 						<Button className="mt-6 w-full" onClick={handleSignup}>
 							Cadastrar
 						</Button>

@@ -1,14 +1,18 @@
-import React from "react";
+import React, { JSX } from "react";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 
-export function Dashboard() {
-	const { logout } = useAuthStore();
+type AuthActions = {
+	logout: () => void;
+};
+
+export function Dashboard(): JSX.Element {
+	const { logout }: AuthActions = useAuthStore();
 	const navigate = useNavigate();
 
-	const handleLogout = () => {
+	const handleLogout = (): void => {
 		logout();
 		navigate("/");
 	};
