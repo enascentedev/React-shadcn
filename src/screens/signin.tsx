@@ -18,9 +18,9 @@ import {
 	CarouselNext,
 } from "../components/ui/carousel";
 import { Button } from "../components/ui/button";
-import img1 from "../assets/1.svg";
-import img2 from "../assets/2.svg";
-import img3 from "../assets/3.svg";
+// import img1 from "../assets/1.svg";
+// import img2 from "../assets/2.svg";
+// import img3 from "../assets/3.svg";
 
 import { useAuthStore } from "../store/authStore";
 
@@ -48,7 +48,7 @@ export function Signin(): JSX.Element {
 	return (
 		<main className="bg-primary w-full h-screen flex">
 			<div className="bg-secondary w-full h-full flex items-center justify-center p-16">
-				<Carousel className="w-full max-w-3xl">
+				{/* <Carousel className="w-full max-w-3xl">
 					<CarouselContent>
 						{[img1, img2, img3].map((img, idx) => (
 							<CarouselItem key={idx}>
@@ -64,7 +64,7 @@ export function Signin(): JSX.Element {
 					</CarouselContent>
 					<CarouselPrevious />
 					<CarouselNext />
-				</Carousel>
+				</Carousel> */}
 			</div>
 			<section className="flex items-center justify-center bg-background h-full max-w-3xl w-full p-4">
 				<Card className="w-full max-w-md">
